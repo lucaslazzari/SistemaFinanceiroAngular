@@ -6,6 +6,9 @@ import { MenuService } from '../../services/menu.service';
 import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SelectModel } from '../../models/SelectModel';
+import { SistemaService } from '../../services/sistema.service';
+import { SistemaFinanceiro } from '../../models/SistemaFinanceiro';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-categoria',
@@ -24,7 +27,8 @@ import { SelectModel } from '../../models/SelectModel';
 })
 export class CategoriaComponent {
 
-  constructor(public menuService: MenuService, public formBuider: FormBuilder){
+  constructor(public menuService: MenuService, public formBuider: FormBuilder,
+     public sistemaService: SistemaService, public authService: AuthService){
   }
 
   listSistemas = new Array<SelectModel>();
@@ -41,6 +45,8 @@ export class CategoriaComponent {
         name:['',[Validators.required]]
       }
     )
+
+    this.ListaSistemasUsuario();
   }
 
   dadosForm(){
@@ -51,5 +57,22 @@ export class CategoriaComponent {
     debugger
     var dados = this.dadosForm();
     alert(dados["name"].value)
+  }
+
+  ListaSistemasUsuario(){
+    this.sistemaService.ListaSistemasUsuario(this.authService.getEmailUser())
+    .subscribe((response: Array<SistemaFinanceiro>) => {
+      var listSistemaFinanceiro = [];
+
+      response.forEach(x => {
+        var item = new SelectModel();
+        item.id = x.id.toString();
+        item.name = x.nome;
+
+        listSistemaFinanceiro.push(item);
+      });
+
+      this.listSistemas = listSistemaFinanceiro;
+    })
   }
 }
