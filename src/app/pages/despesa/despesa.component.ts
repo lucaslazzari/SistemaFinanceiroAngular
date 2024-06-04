@@ -6,6 +6,8 @@ import { MenuService } from '../../services/menu.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SelectModel } from '../../models/SelectModel';
+import { AuthService } from '../../services/auth.service';
+import { AuthGuard } from '../guards/auth-guard.service';
 
 @Component({
   selector: 'app-despesa',
@@ -17,11 +19,12 @@ import { SelectModel } from '../../models/SelectModel';
     SidebarComponent,
     ReactiveFormsModule,
     FormsModule,
-    NgSelectModule
+    NgSelectModule,
   ],
   templateUrl: './despesa.component.html',
   styleUrl: './despesa.component.scss'
 })
+
 export class DespesaComponent {
 
   constructor(public menuService: MenuService, public formBuider: FormBuilder){

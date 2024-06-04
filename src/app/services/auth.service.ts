@@ -1,6 +1,5 @@
-import {  Inject, Injectable } from "@angular/core";
+import {   Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CommonModule,DOCUMENT } from "@angular/common";
 
 @Injectable({
     providedIn: 'root'
@@ -50,6 +49,21 @@ export class AuthService
         this.limparToken();
         localStorage.clear();
         sessionStorage.clear();
+    }
+
+    setEmailUser(email: string){
+        localStorage.setItem('emailUser', email);
+    }
+
+    getEmailUser(){
+        var emailUserLogado = localStorage.getItem('emailUser');
+        if(emailUserLogado){
+            return emailUserLogado;
+        }
+        else{
+            this.limparDadosUsuario();
+            return "";
+        }
     }
 
 }

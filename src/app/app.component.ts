@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { AuthService } from './services/auth.service';
 
 
 @Component({
@@ -13,7 +13,8 @@ import { AuthService } from './services/auth.service';
     RouterOutlet,
     NgxSpinnerModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    HttpClientModule
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './app.component.html',

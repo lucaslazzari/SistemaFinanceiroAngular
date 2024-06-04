@@ -1,7 +1,8 @@
-import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
-import { AuthService } from "../../services/auth.service";
-import { Observable } from "rxjs";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +11,7 @@ import { Injectable } from "@angular/core";
 export class AuthGuard implements CanActivate
 {
     constructor(private authService: AuthService,
-        private router: Router){
-    }
+        private router: Router){}
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
         | Observable<boolean | UrlTree>
@@ -32,12 +32,12 @@ export class AuthGuard implements CanActivate
                     if(blnUnAuthorize && redirect != null && redirect.length > 0)
                         this.router.navigate(["login", {redirect}]);
                     else if (blnUnAuthorize)
-                        this.router.navigate(["login"]);
+                        this.router.navigate(["login",]);
 
                     resolve(status);
                 })
                 .catch(() => {
-                    this.router.navigate(["login"]);
+                    this.router.navigate(["login",]);
                     resolve(false);
                 })
             }))

@@ -1,12 +1,17 @@
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { NgxSpinnerService } from "ngx-spinner";
-import { BehaviorSubject, Observable, catchError, finalize, map, throwError } from "rxjs";
-import { AuthService } from "../services/auth.service";
+import {
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest,
+    HttpHeaders,
+} from "@angular/common/http";
 import { Router } from "@angular/router";
-import { error } from "console";
-import { subscribe } from "diagnostics_channel";
+import { BehaviorSubject, Observable, throwError } from "rxjs";
+import { catchError, finalize, map } from "rxjs/operators";
 
+import { NgxSpinnerService } from "ngx-spinner";
+import { AuthService } from "../services/auth.service";
 
 
 @Injectable()
@@ -36,12 +41,10 @@ export class LoaderInterceptor implements HttpInterceptor
         private spinner: NgxSpinnerService,
         private status: HTTPStatus,
         private authService: AuthService,
-        private router: Router
-    ){
-        
-    }
+        private router: Router,
+    ){ }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         ++this._requests;
         let headers;
 
@@ -55,28 +58,28 @@ export class LoaderInterceptor implements HttpInterceptor
             headers: new HttpHeaders({
                 contentType: "false",
                 processData: "false",
-                Authorization: "Bearer" + this.authService.getToken
+                Authorization: "Bearer " + this.authService.getToken
             });
-        }
-        else{
+        }else{
 
             headers = new HttpHeaders()
                 .append("accept", "application/json")
                 .append("Content-Type", "application/json")
-                .append("Authorization", "Bearer" + this.authService.getToken);
+                .append("Authorization", "Bearer " + this.authService.getToken);
         }
 
-        let request = req.clone({headers});
+        let request = req.clone({ headers });
         this.status.setHttpStatus(true);
         this.spinner.show();
 
         return next.handle(request).pipe(
             map((event) => {
-                return event
+                return event;
             }),
             catchError((error: Response) => {
                 if(error.status === 401){
-                    this.router.navigate(["/ROTA-A-DEFINIR- 401 Unauthorized"])
+                    localStorage.clear();
+                    this.router.navigate(["/login"]);
                 }
                 return throwError(error);
             }),
